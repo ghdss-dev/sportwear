@@ -7,30 +7,35 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private CategoryRepository repository;
 
     @Transactional(readOnly = true)
-
     public List<CategoryDto> findAll() {
 
-        List<Category> list = categoryRepository.findAll();
+        List<Category> list = repository.findAll();
 
-        // Usando Stream + Collectors.toList()
-        List<CategoryDto> listDto = list.stream()
+        return list.stream()
 
                 .map(CategoryDto::new)
                 .collect(Collectors.toList());
 
-        return listDto;
+    }
+
+    @Transactional(readOnly = true)
+    public CategoryDto findById(Long id) {
+
+        Category entity = repository.findById(id)
+
+                .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+
+        return new CategoryDto(entity);
     }
 }
 
