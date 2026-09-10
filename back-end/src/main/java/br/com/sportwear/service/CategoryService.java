@@ -3,6 +3,7 @@ package br.com.sportwear.service;
 import br.com.sportwear.dto.CategoryDto;
 import br.com.sportwear.entities.Category;
 import br.com.sportwear.repository.CategoryRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,25 @@ public class CategoryService {
         entity = repository.save(entity);
 
         return new CategoryDto(entity);
+    }
+
+    @Transactional
+    public CategoryDto update(Long id, CategoryDto dto) {
+
+        try {
+
+            Category entity = repository.getOne(id);
+
+            entity.setName(dto.getName());
+            entity = repository.save(entity);
+
+            return new CategoryDto(entity);
+
+        } catch (EntityNotFoundException e) {
+
+            throw new EntityNotFoundException("id not found " + id);
+        }
+
     }
 }
 
