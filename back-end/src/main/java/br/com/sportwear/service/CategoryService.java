@@ -4,6 +4,8 @@ import br.com.sportwear.dto.CategoryDto;
 import br.com.sportwear.entities.Category;
 import br.com.sportwear.repository.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,6 +70,22 @@ public class CategoryService {
             throw new EntityNotFoundException("id not found " + id);
         }
 
+    }
+
+    public void delete(Long id) {
+
+       try {
+
+           repository.deleteById(id);
+
+       } catch (EmptyResultDataAccessException e) {
+
+           throw new EntityNotFoundException("id not found " + id);
+
+       } catch (DataIntegrityViolationException e) {
+
+           throw new DataIntegrityViolationException("Integrity violation");
+       }
     }
 }
 
