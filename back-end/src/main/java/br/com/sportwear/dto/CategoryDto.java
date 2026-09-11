@@ -1,12 +1,8 @@
 package br.com.sportwear.dto;
 
-
-
 import br.com.sportwear.entities.Category;
 
 import java.io.Serializable;
-
-
 
 public class CategoryDto implements Serializable {
 

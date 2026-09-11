@@ -6,6 +6,8 @@ import br.com.sportwear.repository.CategoryRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,14 +22,11 @@ public class CategoryService {
     private CategoryRepository repository;
 
     @Transactional(readOnly = true)
-    public List<CategoryDto> findAll() {
+    public Page<CategoryDto> findAllPaged(PageRequest pageRequest) {
 
-        List<Category> list = repository.findAll();
+        Page<Category> list = repository.findAll(pageRequest);
 
-        return list.stream()
-
-                .map(CategoryDto::new)
-                .collect(Collectors.toList());
+        return list.map(x -> new CategoryDto(x));
 
     }
 

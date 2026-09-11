@@ -4,6 +4,9 @@ import br.com.sportwear.dto.CategoryDto;
 import br.com.sportwear.entities.Category;
 import br.com.sportwear.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -21,9 +24,19 @@ public class CategoryResources {
     private CategoryService service;
 
     @GetMapping
-    public ResponseEntity<List<CategoryDto>> findAll() {
+    public ResponseEntity<Page<CategoryDto>> findAll(
 
-        List<CategoryDto> list = service.findAll();
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "linesPerPage", defaultValue = "12") Integer linePerPage,
+            @RequestParam(value = "direction", defaultValue = "ASC") String direction,
+            @RequestParam(value = "orderBy", defaultValue = "name") String orderBy
+    ) {
+
+        PageRequest pageRequest = PageRequest.of(page, linePerPage, Sort.Direction.valueOf(direction), orderBy);
+
+
+        Page<CategoryDto> list = service.findAllPaged(pageRequest);
+
         return ResponseEntity.ok().body(list);
     }
 
