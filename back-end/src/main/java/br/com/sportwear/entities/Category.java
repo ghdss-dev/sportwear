@@ -15,27 +15,35 @@ public class Category implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
 
-    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private Instant createdDate;
 
-    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private Instant updatedAt;
 
     public Category() {
-
     }
 
     public Category(Long id, String name) {
-
         this.id = id;
         this.name = name;
     }
 
     public Long getId() {
-
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Instant getCreatedDate() {
@@ -48,42 +56,31 @@ public class Category implements Serializable {
 
     @PrePersist
     public void prePersist() {
-
         createdDate = Instant.now();
     }
 
     @PreUpdate
     public void preUpdate() {
-
         updatedAt = Instant.now();
     }
 
-    public void setId(Long id) {
-
-        this.id = id;
-    }
-
-    public String getName() {
-
-        return name;
-    }
-
-    public void setName(String name) {
-
-        this.name = name;
-    }
-
     @Override
-    public final boolean equals(Object o) {
-        if (!(o instanceof Category category)) return false;
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
 
-        return getId().equals(category.getId()) && getName().equals(category.getName());
+        if (!(o instanceof Category)) {
+            return false;
+        }
+
+        Category category = (Category) o;
+
+        return Objects.equals(id, category.id);
     }
 
     @Override
     public int hashCode() {
-        int result = getId().hashCode();
-        result = 31 * result + getName().hashCode();
-        return result;
+        return Objects.hash(id);
     }
 }
